@@ -6,7 +6,7 @@
 /*   By: oalananz <oalananz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 03:44:36 by oalananz          #+#    #+#             */
-/*   Updated: 2025/06/09 02:52:44 by oalananz         ###   ########.fr       */
+/*   Updated: 2025/06/09 02:55:45 by oalananz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void take_forks(t_dine *dine, t_philo *philo)
         dine->meals++;
         pthread_mutex_unlock(&dine->lock);
         
-        philo->last_meal = calculate_time(dine);
+        philo->last_meal = calculate_time(dine) + (dine->time_to_eat * 1000);
         usleep(dine->time_to_eat * 1000);
 
         pthread_mutex_unlock(&philo->left_fork);
