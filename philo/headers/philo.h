@@ -6,7 +6,7 @@
 /*   By: oalananz <oalananz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 22:57:11 by oalananz          #+#    #+#             */
-/*   Updated: 2025/06/08 03:47:23 by oalananz         ###   ########.fr       */
+/*   Updated: 2025/06/09 02:27:40 by oalananz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,12 @@ typedef struct s_dine
     int forks;
     int philos;
     int died;
+    int count;
     int time_to_sleep;
     int time_to_eat;
     int time_to_die;
     int number_of_meals;
+    int meals;
     t_philo *philo;
 } t_dine;
 
@@ -68,13 +70,13 @@ void *monitor(void *arg);
 
 
 
-#define BLACK   "\033[1;30m"
-#define RED     "\033[4;31m"
+#define BLACK   "\033[7;30m"
+#define RED     "\033[7;31m"
 #define GREEN   "\033[7;32m"
 #define YELLOW  "\033[0;33m"
 #define BLUE    "\033[0;34m"
-#define MAGENTA "\033[0;35m"
-#define CYAN    "\033[0;36m"
+#define MAGENTA "\033[7;35m"
+#define CYAN    "\033[7;36m"
 #define WHITE   "\033[0;37m"
 #define RESET   "\033[0m"
 

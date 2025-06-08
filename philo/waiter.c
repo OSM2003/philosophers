@@ -6,7 +6,7 @@
 /*   By: oalananz <oalananz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 03:46:47 by oalananz          #+#    #+#             */
-/*   Updated: 2025/06/08 03:47:17 by oalananz         ###   ########.fr       */
+/*   Updated: 2025/06/09 01:36:59 by oalananz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void *monitor(void *arg)
     while (!dine->died)
     {
         pthread_mutex_lock(&dine->lock);
-        if (calculate_time(dine) - philo->last_meal > dine->time_to_die)
+        if (calculate_time(dine) - philo->last_meal > dine->time_to_die
+            && dine->meals != dine->philos)
         {
             dine->died = 1;
             printf(BLACK "%ld %ld died\n" RESET, calculate_time(dine), philo->id);

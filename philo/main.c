@@ -6,7 +6,7 @@
 /*   By: oalananz <oalananz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 22:56:52 by oalananz          #+#    #+#             */
-/*   Updated: 2025/06/08 03:47:13 by oalananz         ###   ########.fr       */
+/*   Updated: 2025/06/09 02:06:10 by oalananz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int main(int ac, char **av)
         init_arguments(av,dine);
         Seating_philosophers(dine);
         gettimeofday(&dine->start, NULL);
-        // display(dine->philo);
         create_threads(dine);
         return 0;
     }
