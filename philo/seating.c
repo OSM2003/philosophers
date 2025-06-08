@@ -6,7 +6,7 @@
 /*   By: oalananz <oalananz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 20:22:04 by oalananz          #+#    #+#             */
-/*   Updated: 2025/06/07 22:25:55 by oalananz         ###   ########.fr       */
+/*   Updated: 2025/06/08 03:01:35 by oalananz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@ t_philo *create_node(int id)
         return NULL;
     new_node->id = id;
     new_node->thread = 0;
-    new_node->left_fork = NULL;
-    new_node->right_fork = NULL;
-    new_node->last_meal_time = 0;
+    new_node->last_meal = 0;
     new_node->meals_eaten = 0;
     new_node->next = new_node;
     return new_node;

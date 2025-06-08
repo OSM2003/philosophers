@@ -6,7 +6,7 @@
 /*   By: oalananz <oalananz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 22:56:52 by oalananz          #+#    #+#             */
-/*   Updated: 2025/06/07 22:31:19 by oalananz         ###   ########.fr       */
+/*   Updated: 2025/06/08 03:47:13 by oalananz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,6 @@ void display_dine(t_dine *dine)
     printf("-------------------------------\n");
 }
 
-void    *ft_eat(void *arg)
-{
-    t_args *args = (t_args *)arg;
-    t_dine *dine = args->dine;
-    t_philo *philo = args->philo;
-    long elapsed;
-
-    pthread_mutex_lock(&dine->lock);
-    gettimeofday(&dine->end, NULL);
-    elapsed = (dine->end.tv_sec - dine->start.tv_sec) * 1000;
-    elapsed += (dine->end.tv_usec - dine->start.tv_usec) / 1000;
-    printf(YELLOW "%ld %ld is eating\n" RESET,elapsed, philo->id);
-    usleep(dine->time_to_eat * 1000);
-    pthread_mutex_unlock(&dine->lock);
-
-    return NULL;
-}
-
 void    join_threads(t_dine *dine)
 {
     int i;
@@ -60,27 +42,6 @@ void    join_threads(t_dine *dine)
     }
 }
 
-void    *ft_routine(void *arg)
-{
-    t_args *args = (t_args *)arg;
-    t_dine *dine = args->dine;
-    t_philo *philo = args->philo;
-    long elapsed;
-
-    pthread_mutex_lock(&dine->lock);
-    gettimeofday(&dine->end, NULL);
-    elapsed = (dine->end.tv_sec - dine->start.tv_sec) * 1000;
-    elapsed += (dine->end.tv_usec - dine->start.tv_usec) / 1000;
-    printf(BLUE "%ld %ld is eating\n" RESET,elapsed, philo->id);
-    usleep(dine->time_to_eat * 1000);
-    printf(CYAN "%ld %ld is sleeping\n" RESET,elapsed, philo->id);
-    usleep(dine->time_to_sleep);
-    printf(MAGENTA "%ld %ld is thinking\n" RESET,elapsed, philo->id);
-    pthread_mutex_unlock(&dine->lock);
-
-    return (NULL);
-}
-
 void    create_threads(t_dine *dine)
 {
     int i = 0;
@@ -92,7 +53,6 @@ void    create_threads(t_dine *dine)
         t_args *args = malloc(sizeof(t_args));
         args->dine = dine;
         args->philo = temp;
-        usleep(10000);
         pthread_create(&temp->thread, NULL, ft_routine, (void *)args);
         i++;
         temp = temp->next;
@@ -102,7 +62,6 @@ void    create_threads(t_dine *dine)
 
 int main(int ac, char **av)
 {
-    printf("%d\n",all_digits(av));
     if((ac == 5 || ac == 6) && all_digits(av))
     {
         t_dine *dine;

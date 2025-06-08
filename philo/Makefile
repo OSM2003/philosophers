@@ -2,7 +2,7 @@ CC = cc
 
 CFLAGS = -Werror -Wextra -Wall -Iheaders
 
-SRCS = main.c seating.c utils.c \
+SRCS = main.c seating.c utils.c  routine.c waiter.c \
 
 
 OBJS = $(SRCS:.c=.o)

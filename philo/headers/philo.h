@@ -6,7 +6,7 @@
 /*   By: oalananz <oalananz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 22:57:11 by oalananz          #+#    #+#             */
-/*   Updated: 2025/06/07 22:08:05 by oalananz         ###   ########.fr       */
+/*   Updated: 2025/06/08 03:47:23 by oalananz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@
 typedef struct s_philo {
     long id;
     pthread_t thread;
-    pthread_mutex_t *left_fork;
-    pthread_mutex_t *right_fork;
-    long last_meal_time;
+    pthread_mutex_t left_fork;
+    pthread_mutex_t right_fork;
+    long last_meal;
+    int flag;
     int meals_eaten;
+    int eat_flag;
     struct s_philo *next;
 } t_philo;
 
@@ -38,6 +40,7 @@ typedef struct s_dine
     struct timeval end;
     int forks;
     int philos;
+    int died;
     int time_to_sleep;
     int time_to_eat;
     int time_to_die;
@@ -56,6 +59,12 @@ void    init_arguments(char **av, t_dine *dine);
 int     ft_atoi(const char *nptr);
 int     all_digits(char **av);
 void    *ft_calloc(size_t nmemb, size_t size);
+void ft_sleep(t_dine *dine, t_philo *philo);
+void ft_think(t_dine *dine, t_philo *philo);
+void take_forks(t_dine *dine, t_philo *philo);
+long    calculate_time(t_dine *dine);
+void *ft_routine(void *arg);
+void *monitor(void *arg);
 
 
 
