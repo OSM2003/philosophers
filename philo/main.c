@@ -6,7 +6,7 @@
 /*   By: oalananz <oalananz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 22:56:52 by oalananz          #+#    #+#             */
-/*   Updated: 2025/06/09 02:06:10 by oalananz         ###   ########.fr       */
+/*   Updated: 2025/06/11 21:25:08 by oalananz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ void    create_threads(t_dine *dine)
     int i = 0;
     t_philo *temp = dine->philo;
     display_dine(dine);
-    
+
+    pthread_t monitor_thread;
+    pthread_create(&monitor_thread, NULL, monitor, dine);
+
     while(i < dine->philos)
     {
         t_args *args = malloc(sizeof(t_args));
@@ -57,6 +60,7 @@ void    create_threads(t_dine *dine)
         i++;
         temp = temp->next;
     }
+    pthread_join(monitor_thread, NULL);
     join_threads(dine);
 }
 
@@ -75,5 +79,5 @@ int main(int ac, char **av)
         create_threads(dine);
         return 0;
     }
-    printf(RED "./phio number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
+    printf(BLUE "./phio number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
 }
