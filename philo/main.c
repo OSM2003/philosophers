@@ -6,78 +6,113 @@
 /*   By: oalananz <oalananz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 22:56:52 by oalananz          #+#    #+#             */
-/*   Updated: 2025/06/11 21:25:08 by oalananz         ###   ########.fr       */
+/*   Updated: 2025/06/12 15:41:52 by oalananz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void display_dine(t_dine *dine)
+void	join_threads(t_dine *dine)
 {
-    printf("------ Dine Struct Info ------\n");
-    printf("Number of philosophers   : %d\n", dine->philos);
-    printf("Number of forks          : %d\n", dine->forks);
-    printf("Time to die (ms)         : %d\n", dine->time_to_die);
-    printf("Time to eat (ms)         : %d\n", dine->time_to_eat);
-    printf("Time to sleep (ms)       : %d\n", dine->time_to_sleep);
-    printf("Meals per philosopher    : %d\n", dine->number_of_meals);
-    printf("Start time (s:us)        : %ld : %ld\n", dine->start.tv_sec, dine->start.tv_usec);
-    printf("End time   (s:us)        : %ld : %ld\n", dine->end.tv_sec, dine->end.tv_usec);
-    printf("-------------------------------\n");
+	int		i;
+	t_philo	*temp;
+
+	i = 0;
+	temp = dine->philo;
+	while (i < dine->philos)
+	{
+		pthread_join(temp->thread, NULL);
+		i++;
+		temp = temp->next;
+	}
 }
 
-void    join_threads(t_dine *dine)
+void	free_philo(t_philo *philo)
 {
-    int i;
+	t_philo	*temp;
+	t_philo	*next;
+	t_philo	*start;
 
-    i = 0;
-    t_philo *temp;
-
-    temp = dine->philo;
-    while(i < dine->philos)
-    {
-        pthread_join(temp->thread,NULL);
-        i++;
-        temp = temp->next;
-    }
+	temp = philo;
+	if (temp)
+	{
+		start = temp;
+		while (temp->next != start)
+			temp = temp->next;
+		temp->next = NULL;
+		temp = start;
+		while (temp)
+		{
+			next = temp->next;
+			free(temp);
+			temp = next;
+		}
+	}
 }
 
-void    create_threads(t_dine *dine)
+void	clean_restaurants(t_dine *dine)
 {
-    int i = 0;
-    t_philo *temp = dine->philo;
-    display_dine(dine);
+	int	i;
 
-    pthread_t monitor_thread;
-    pthread_create(&monitor_thread, NULL, monitor, dine);
-
-    while(i < dine->philos)
-    {
-        t_args *args = malloc(sizeof(t_args));
-        args->dine = dine;
-        args->philo = temp;
-        pthread_create(&temp->thread, NULL, ft_routine, (void *)args);
-        i++;
-        temp = temp->next;
-    }
-    pthread_join(monitor_thread, NULL);
-    join_threads(dine);
+	i = 0;
+	if (dine->philo_forks)
+	{
+		while (i < dine->forks)
+		{
+			pthread_mutex_destroy(&dine->philo_forks[i]);
+			i++;
+		}
+		free(dine->philo_forks);
+	}
+	pthread_mutex_destroy(&dine->lock);
+	if (dine->philo)
+		free_philo(dine->philo);
+	free(dine);
 }
 
-int main(int ac, char **av)
+void	create_threads(t_dine *dine)
 {
-    if((ac == 5 || ac == 6) && all_digits(av))
-    {
-        t_dine *dine;
+	int			i;
+	t_philo		*temp;
+	pthread_t	monitor_thread;
+	t_args		*args;
 
-        dine = ft_calloc(1,sizeof(t_dine));
-        if(!dine)
-            return (1);
-        init_arguments(av,dine);
-        Seating_philosophers(dine);
-        gettimeofday(&dine->start, NULL);
-        create_threads(dine);
-        return 0;
-    }
-    printf(BLUE "./phio number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
+	i = 0;
+	pthread_create(&monitor_thread, NULL, monitor, dine);
+	temp = dine->philo;
+	while (i < dine->philos)
+	{
+		args = malloc(sizeof(t_args));
+		if (!args)
+			return ;
+		args->dine = dine;
+		args->philo = temp;
+		pthread_create(&temp->thread, NULL, ft_routine, (void *)args);
+		i++;
+		temp = temp->next;
+	}
+	pthread_join(monitor_thread, NULL);
+	join_threads(dine);
+	if (dine->died && dine->meals != dine->philos)
+		printf(WHITE "%ld %ld died\n" RESET, calculate_time(dine),
+			dine->philo->id);
+	clean_restaurants(dine);
+}
+
+int	main(int ac, char **av)
+{
+	t_dine	*dine;
+
+	if ((ac == 5 || ac == 6) && all_digits(av))
+	{
+		dine = ft_calloc(1, sizeof(t_dine));
+		if (!dine)
+			return (1);
+		init_arguments(av, dine);
+		seating_philosophers(dine);
+		gettimeofday(&dine->start, NULL);
+		create_threads(dine);
+		return (0);
+	}
+	printf("./philo no_of_philos t_to_die t_to_eat t_to_sleep [no of meals]\n");
 }

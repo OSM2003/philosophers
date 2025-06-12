@@ -1,8 +1,8 @@
 CC = cc
 
-CFLAGS = -Werror -Wextra -Wall -Iheaders
+CFLAGS = -Werror -Wextra -Wall
 
-SRCS = main.c seating.c utils.c  routine.c waiter.c \
+SRCS = main.c seating.c utils.c philo_loop.c routine.c waiter.c forks.c \
 
 
 OBJS = $(SRCS:.c=.o)
